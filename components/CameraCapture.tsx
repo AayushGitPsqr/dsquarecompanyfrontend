@@ -1,0 +1,234 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { RefreshCw } from "lucide-react";
+
+type CameraCaptureProps = {
+  onCapture: (file: File) => void;
+  onCancel: () => void;
+  busy?: boolean;
+};
+
+export function CameraCapture({ onCapture, onCancel, busy = false }: CameraCaptureProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [starting, setStarting] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [permissionError, setPermissionError] = useState("");
+
+  const stopCamera = useCallback(() => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setStream(null);
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setHasStarted(false);
+    setLoading(false);
+    setStarting(false);
+  }, []);
+
+  const startCamera = useCallback(async () => {
+    setPermissionError("");
+    setStarting(true);
+    setLoading(true);
+
+    try {
+      const nextStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" }
+        },
+        audio: false
+      });
+
+      streamRef.current = nextStream;
+      setStream(nextStream);
+      setHasStarted(true);
+    } catch {
+      setPermissionError(
+        "Camera access was denied or unavailable. Please allow camera permissions and try again."
+      );
+    } finally {
+      setLoading(false);
+      setStarting(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.isSecureContext) {
+      setPermissionError(
+        "Camera requires HTTPS or localhost on mobile. Open this page over HTTPS or use a secure tunnel like ngrok, then try again."
+      );
+    }
+
+    void startCamera();
+
+    return () => {
+      stopCamera();
+    };
+  }, [startCamera, stopCamera]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !stream) return;
+
+    video.srcObject = stream;
+    const playPromise = video.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        // Some mobile browsers briefly reject autoplay until the stream settles.
+      });
+    }
+  }, [stream]);
+
+  function captureFrame() {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const canvas = document.createElement("canvas");
+    const maxDimension = 1600;
+    const scale = Math.min(
+      1,
+      maxDimension / Math.max(video.videoWidth, video.videoHeight)
+    );
+    canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
+    canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const file = new File([blob], `business-card-${Date.now()}.jpg`, {
+        type: "image/jpeg"
+      });
+      onCapture(file);
+    }, "image/jpeg", 0.82);
+  }
+
+  return (
+    <section className="premium-shell rounded-[28px] p-3 sm:p-4">
+      <div className="scanner-orb scanner-orb--a" />
+      <div className="scanner-orb scanner-orb--b" />
+
+      <div className="relative rounded-[24px] border border-black/5 bg-white/65 p-4 shadow-glass backdrop-blur-xl sm:p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-aqua-deep">
+                Smart camera
+              </p>
+              <h3 className="mt-1 text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
+                Capture the card in one tap
+              </h3>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate sm:text-[0.95rem]">
+                Point the camera at the business card. OpenAI reads it, then you
+                verify the extracted details before saving to MongoDB.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                stopCamera();
+                onCancel();
+              }}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/75 px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-aqua/60 hover:bg-white"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Restart
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative mt-4 overflow-hidden rounded-[28px] border border-black/10 bg-ink shadow-[0_24px_70px_rgba(7,16,19,0.16)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(51,214,210,0.18),transparent_42%),linear-gradient(180deg,rgba(7,16,19,0.06),rgba(7,16,19,0.34))]" />
+        <div className="relative aspect-[4/5] min-h-[24rem] sm:aspect-[16/10] sm:min-h-[32rem]">
+          <video
+            ref={videoRef}
+            playsInline
+            muted
+            autoPlay
+            className="absolute inset-0 h-full w-full bg-black object-cover"
+          />
+
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative h-[78%] w-[84%] rounded-[2rem] border-2 border-white/65 shadow-[0_0_0_9999px_rgba(7,16,19,0.2)] sm:h-[74%] sm:w-[68%]">
+                <div className="absolute left-4 top-4 h-10 w-10 border-l-4 border-t-4 border-aqua" />
+                <div className="absolute right-4 top-4 h-10 w-10 border-r-4 border-t-4 border-aqua" />
+                <div className="absolute bottom-4 left-4 h-10 w-10 border-b-4 border-l-4 border-aqua" />
+                <div className="absolute bottom-4 right-4 h-10 w-10 border-b-4 border-r-4 border-aqua" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+                  <div className="mx-auto h-0.5 w-[70%] rounded-full bg-gradient-to-r from-transparent via-aqua to-transparent opacity-80" />
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6">
+              <div className="rounded-[1.25rem] border border-white/12 bg-black/28 px-4 py-3 text-center text-sm font-semibold tracking-wide text-white/95 backdrop-blur">
+                Place the card inside the frame
+              </div>
+            </div>
+          </div>
+
+          {permissionError ? (
+            <div className="absolute inset-0 grid place-items-center bg-black/75 p-6 text-center text-white">
+              <div className="max-w-md">
+                <p className="text-lg font-medium">{permissionError}</p>
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  disabled={starting}
+                  className="mt-4 inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:bg-aqua disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {starting ? "Opening..." : "Try again"}
+                </button>
+              </div>
+            </div>
+          ) : !hasStarted ? (
+            <div className="absolute inset-0 grid place-items-center bg-black/75 p-6 text-center text-white">
+              <div className="max-w-md">
+                <p className="text-lg font-medium">
+                  Allow camera access to start scanning.
+                </p>
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  disabled={starting}
+                  className="mt-4 inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:bg-aqua disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {starting ? "Opening..." : "Allow camera access"}
+                </button>
+              </div>
+            </div>
+          ) : loading ? (
+            <div className="absolute inset-0 grid place-items-center bg-black/70 text-white/70">
+              Opening camera...
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate">
+          Keep the card inside the frame, then tap capture.
+        </p>
+        <button
+          type="button"
+          onClick={captureFrame}
+          disabled={!hasStarted || loading || Boolean(permissionError) || busy}
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-ink via-aqua-deep to-aqua px-6 py-3.5 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(0,140,149,0.28)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {busy ? "Processing..." : "Capture image"}
+        </button>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #071013;
+  --aqua: #33d6d2;
+  --aqua-mid: #00b7c2;
+  --aqua-deep: #008c95;
+  --pearl: #f7faf9;
+  --slate: #516268;
+  --ink: #071013;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at top left, rgba(51, 214, 210, 0.16), transparent 28rem),
+    radial-gradient(circle at top right, rgba(0, 140, 149, 0.14), transparent 24rem),
+    linear-gradient(180deg, rgba(247, 250, 250, 0.96), #ffffff 18rem),
+    #ffffff;
+  font-family:
+    Inter, Satoshi, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  color: #071013;
+  background: rgba(51, 214, 210, 0.38);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(51, 214, 210, 0.72);
+  outline-offset: 3px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58)),
+    rgba(255, 255, 255, 0.62);
+  box-shadow: 0 24px 70px rgba(7, 16, 19, 0.1);
+  backdrop-filter: blur(22px);
+}
+
+.premium-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 249, 0.84)),
+    rgba(255, 255, 255, 0.72);
+  box-shadow: 0 28px 100px rgba(7, 16, 19, 0.12);
+  backdrop-filter: blur(24px);
+}
+
+.premium-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(51, 214, 210, 0.14), transparent 34%),
+    linear-gradient(225deg, rgba(0, 140, 149, 0.09), transparent 42%);
+  pointer-events: none;
+}
+
+.scanner-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.scanner-orb--a {
+  inset: -4rem auto auto -4rem;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(51, 214, 210, 0.2);
+}
+
+.scanner-orb--b {
+  right: -3rem;
+  bottom: 8rem;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(0, 140, 149, 0.16);
+}
+
+.shadow-glass {
+  box-shadow: 0 24px 70px rgba(7, 16, 19, 0.1);
+}
+
+.bg-pearl {
+  background: var(--pearl);
+}
+
+.bg-ink {
+  background: var(--ink);
+}
+
+.text-ink {
+  color: var(--ink);
+}
+
+.text-slate {
+  color: var(--slate);
+}
+
+.text-aqua-deep {
+  color: var(--aqua-deep);
+}
+
+.bg-aqua {
+  background: var(--aqua);
+}
+
+.bg-aqua-deep {
+  background: var(--aqua-deep);
+}
+
+.border-aqua {
+  border-color: var(--aqua);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
