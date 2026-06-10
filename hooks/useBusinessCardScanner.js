@@ -16,6 +16,7 @@ export function useBusinessCardScanner() {
     const [state, setState] = useState("idle");
     const [draft, setDraft] = useState(emptyCard);
     const [previewImage, setPreviewImage] = useState("");
+    const [previewObjectUrl, setPreviewObjectUrl] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [fieldErrors, setFieldErrors] = useState({});
@@ -23,6 +24,13 @@ export function useBusinessCardScanner() {
     function reset() {
         setState("idle");
         setDraft(emptyCard);
+        if (previewObjectUrl) {
+            try {
+                URL.revokeObjectURL(previewObjectUrl);
+            }
+            catch { }
+            setPreviewObjectUrl("");
+        }
         setPreviewImage("");
         setError("");
         setSuccess("");
@@ -37,6 +45,13 @@ export function useBusinessCardScanner() {
             return;
         }
         setState("uploading");
+        // show an immediate local preview while the image uploads/scans
+        try {
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewObjectUrl(objectUrl);
+            setPreviewImage(objectUrl);
+        }
+        catch { }
         try {
             const result = await scanCard(file);
             const merged = businessCardFromPartial({
@@ -46,13 +61,35 @@ export function useBusinessCardScanner() {
                 cardImage: typeof result.data.cardImage === "string" ? result.data.cardImage : ""
             });
             setDraft(merged);
-            setPreviewImage(typeof result.data.cardImage === "string" && result.data.cardImage
-                ? result.data.cardImage
-                : "");
+            // if backend returned a hosted URL (Cloudinary), prefer that
+            if (typeof result.data.cardImage === "string" && result.data.cardImage) {
+                // revoke local object url if any
+                if (previewObjectUrl) {
+                    try {
+                        URL.revokeObjectURL(previewObjectUrl);
+                    }
+                    catch { }
+                    setPreviewObjectUrl("");
+                }
+                setPreviewImage(result.data.cardImage);
+            }
+            else {
+                // preserve local preview (already set) or clear
+                setPreviewImage((current) => current || "");
+            }
             setState("editing");
         }
         catch (err) {
             setError(err instanceof Error ? err.message : "Unable to scan the card.");
+            // cleanup local preview on error
+            if (previewObjectUrl) {
+                try {
+                    URL.revokeObjectURL(previewObjectUrl);
+                }
+                catch { }
+                setPreviewObjectUrl("");
+            }
+            setPreviewImage("");
             setState("error");
         }
     }

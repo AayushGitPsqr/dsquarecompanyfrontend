@@ -116,19 +116,16 @@ export function CameraCapture({ onCapture, onCancel, busy = false }: CameraCaptu
 
       <div className="relative rounded-[24px] border border-black/5 bg-white/65 p-4 shadow-glass backdrop-blur-xl sm:p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-aqua-deep">
-                Smart camera
-              </p>
-              <h3 className="mt-1 text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
-                Capture the card in one tap
-              </h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate sm:text-[0.95rem]">
-                Point the camera at the business card. OpenAI reads it, then you
-                verify the extracted details before saving to MongoDB.
-              </p>
-            </div>
+          <div className="space-y-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-aqua-deep">
+              Camera
+            </p>
+            <h3 className="text-3xl font-semibold tracking-tight text-ink sm:text-[2.15rem]">
+              Scan the card
+            </h3>
+            <p className="max-w-2xl text-sm leading-6 text-slate sm:text-[0.95rem]">
+              Point the card inside the frame and capture it when it looks clear.
+            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -217,9 +214,7 @@ export function CameraCapture({ onCapture, onCancel, busy = false }: CameraCaptu
       </div>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-slate">
-          Keep the card inside the frame, then tap capture.
-        </p>
+        <p className="text-sm text-slate">Keep the card inside the frame, then tap capture.</p>
         <button
           type="button"
           onClick={captureFrame}

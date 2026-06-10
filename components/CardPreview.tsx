@@ -41,12 +41,9 @@ export function CardPreview({
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-aqua-deep">
               Review
             </p>
-            <h3 className="mt-1 text-2xl font-semibold text-ink">
-              Confirm extracted details
-            </h3>
+            <h3 className="mt-1 text-2xl font-semibold text-ink">Confirm extracted details</h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate">
-              Check the fields the AI found, tweak anything that looks off, and
-              save the final card to MongoDB.
+              Review the fields, make any fixes, and save the card when everything looks right.
             </p>
           </div>
           <div className="flex gap-3">

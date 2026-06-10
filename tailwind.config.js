@@ -1,5 +1,12 @@
 const config = {
-    content: ["./index.html", "./**/*.{ts,tsx}"],
+    content: [
+        "./index.html",
+        "./pages/**/*.{ts,tsx}",
+        "./components/**/*.{ts,tsx}",
+        "./hooks/**/*.{ts,tsx}",
+        "./utils/**/*.{ts,tsx}",
+        "./*.{ts,tsx}"
+    ],
     theme: {
         extend: {
             colors: {
