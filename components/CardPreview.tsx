@@ -65,7 +65,22 @@ export function CardPreview({
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="mt-6 grid gap-6">
+          <div className="overflow-hidden rounded-[24px] border border-black/10 bg-ink">
+            <div className="border-b border-white/10 px-4 py-3 text-white">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
+                Captured image
+              </p>
+            </div>
+            <div className="bg-black/20 p-3">
+              <img
+                src={imageSrc}
+                alt="Captured business card"
+                className="h-[22rem] w-full rounded-[18px] object-contain"
+              />
+            </div>
+          </div>
+
           <div className="rounded-[24px] border border-black/5 bg-white/75 p-4">
             <div className="grid gap-1 sm:grid-cols-2">
               {fields.map((field) => (
@@ -89,21 +104,6 @@ export function CardPreview({
                   ) : null}
                 </label>
               ))}
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-[24px] border border-black/10 bg-ink">
-            <div className="border-b border-white/10 px-4 py-3 text-white">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
-                Captured image
-              </p>
-            </div>
-            <div className="bg-black/20 p-3">
-              <img
-                src={imageSrc}
-                alt="Captured business card"
-                className="h-[22rem] w-full rounded-[18px] object-contain"
-              />
             </div>
           </div>
         </div>
