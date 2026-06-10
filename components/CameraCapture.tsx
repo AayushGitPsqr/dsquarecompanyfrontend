@@ -157,19 +157,19 @@ export function CameraCapture({ onCapture, onCancel, busy = false }: CameraCaptu
 
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-[70%] w-[76%] rounded-[1.75rem] border-2 border-white/65 shadow-[0_0_0_9999px_rgba(7,16,19,0.2)] sm:h-[66%] sm:w-[60%]">
-                <div className="absolute left-3 top-3 h-8 w-8 border-l-4 border-t-4 border-aqua" />
-                <div className="absolute right-3 top-3 h-8 w-8 border-r-4 border-t-4 border-aqua" />
-                <div className="absolute bottom-3 left-3 h-8 w-8 border-b-4 border-l-4 border-aqua" />
-                <div className="absolute bottom-3 right-3 h-8 w-8 border-b-4 border-r-4 border-aqua" />
+              <div className="relative h-[78%] w-[84%] rounded-[2rem] border-2 border-white/65 shadow-[0_0_0_9999px_rgba(7,16,19,0.2)] sm:h-[74%] sm:w-[68%]">
+                <div className="absolute left-4 top-4 h-10 w-10 border-l-4 border-t-4 border-aqua" />
+                <div className="absolute right-4 top-4 h-10 w-10 border-r-4 border-t-4 border-aqua" />
+                <div className="absolute bottom-4 left-4 h-10 w-10 border-b-4 border-l-4 border-aqua" />
+                <div className="absolute bottom-4 right-4 h-10 w-10 border-b-4 border-r-4 border-aqua" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
                   <div className="mx-auto h-0.5 w-[70%] rounded-full bg-gradient-to-r from-transparent via-aqua to-transparent opacity-80" />
                 </div>
               </div>
             </div>
 
-            <div className="absolute inset-x-6 bottom-6 sm:inset-x-10 sm:bottom-8">
-              <div className="rounded-[1.1rem] border border-white/12 bg-black/28 px-3 py-2 text-center text-xs font-semibold tracking-wide text-white/95 backdrop-blur sm:px-4 sm:py-3 sm:text-sm">
+            <div className="absolute inset-x-4 bottom-4 sm:inset-x-6 sm:bottom-6">
+              <div className="rounded-[1.25rem] border border-white/12 bg-black/28 px-4 py-3 text-center text-sm font-semibold tracking-wide text-white/95 backdrop-blur">
                 Place the card inside the frame
               </div>
             </div>

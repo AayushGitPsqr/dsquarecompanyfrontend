@@ -149,54 +149,14 @@ export function BusinessCardScannerPage() {
               busy={state === "uploading" || state === "saving"}
             />
 
-            {state === "uploading" ? (
-              <section className="premium-shell rounded-[28px] p-3 sm:p-4">
-                <div className="rounded-[24px] border border-black/5 bg-white/72 p-4 shadow-glass backdrop-blur-xl sm:p-5">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-aqua-deep">
-                        Processing
-                      </p>
-                      <h3 className="mt-1 text-2xl font-semibold text-ink">
-                        Reading the card
-                      </h3>
-                      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate">
-                        The captured image is already shown below. We are extracting the text now,
-                        then the fields will appear with it.
-                      </p>
-                    </div>
-                    <div className="inline-flex items-center gap-3 rounded-full border border-black/5 bg-white/80 px-4 py-3 text-sm font-medium text-slate shadow-sm backdrop-blur">
-                      <Loader2 className="h-4 w-4 animate-spin text-aqua-deep" />
-                      Reading card data...
-                    </div>
-                  </div>
-
-                  <div className="mt-6 overflow-hidden rounded-[24px] border border-black/10 bg-ink">
-                    <div className="border-b border-white/10 px-4 py-3 text-white">
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
-                        Captured image
-                      </p>
-                    </div>
-                    <div className="bg-black/20 p-3">
-                      <img
-                        src={previewImage}
-                        alt="Captured business card"
-                        className="h-[22rem] w-full rounded-[18px] object-contain"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ) : null}
-
-            {state === "saving" ? (
+            {state === "uploading" || state === "saving" ? (
               <div className="inline-flex w-fit items-center gap-3 rounded-full border border-black/5 bg-white/80 px-4 py-3 text-sm font-medium text-slate shadow-sm backdrop-blur">
                 <Loader2 className="h-4 w-4 animate-spin text-aqua-deep" />
-                Saving card...
+                {state === "uploading" ? "Reading card data..." : "Saving card..."}
               </div>
             ) : null}
 
-            {state === "editing" || state === "saving" ? (
+            {state === "editing" ? (
               <CardPreview
                 draft={draft}
                 imageSrc={previewImage || draft.cardImage}
@@ -204,7 +164,7 @@ export function BusinessCardScannerPage() {
                 onChange={setDraft}
                 onSave={handleSave}
                 onRetake={reset}
-                saving={state === "saving"}
+                saving={false}
                 canSubmit={canSubmit}
               />
             ) : null}
